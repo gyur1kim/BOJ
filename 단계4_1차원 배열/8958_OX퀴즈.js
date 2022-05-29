@@ -31,3 +31,14 @@ for(var test of ox){
     console.log(total);
 }
  */
+
+//X로 잘라서 O만 남겼다
+for(var test of ox){
+    var splitted = test.split('X');
+    var sum = 0;
+    splitted.map(o=>{
+        var len = o.length;
+        sum += len*(len+1)/2;
+    })
+    console.log(sum);
+}
