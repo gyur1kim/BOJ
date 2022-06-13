@@ -68,7 +68,8 @@ console.log(result);
  */
 
 //그냥 일일히 나눠야하나보다.
-//일단 짝수로는 나누지 말아보자.
+//일단 짝수로는 나누지 말아보자.  ==>시간초과 뜸 ㅜㅜ
+/*
 var arr = [];
 if(m<=2) arr.push(2);
 if(m%2 === 0){
@@ -90,3 +91,28 @@ for(var j=3; j<Math.sqrt(n)+1; j+=2){
     });
 }
 console.log(arr.join('\n'));
+ */
+
+//결국 인터넷 쳐봤는데 에라토스의 체 맞는데??ㅜㅜ
+//같은 배열도 직접 값을 넣는 거랑 boolean값을 넣는 거랑 다른가보다...
+const isPrimeNumber = Array(n+ 1).fill(true);
+isPrimeNumber[0] = false;
+isPrimeNumber[1] = false;
+
+for (let i = 2; i <= Math.ceil(Math.sqrt(n)); i++) {
+    if (isPrimeNumber[i]) {
+        let j = 2;
+        while (i * j <= n) {
+            isPrimeNumber[i * j] = false;
+            j++;
+        }
+    }
+}
+
+const results = [];
+for (let k = m; k <= n; k++) {
+    if (isPrimeNumber[k]) {
+        results.push(k);
+    }
+}
+console.log(results.join('\n'));
