@@ -95,13 +95,17 @@ console.log(arr.join('\n'));
 
 //결국 인터넷 쳐봤는데 에라토스의 체 맞는데??ㅜㅜ
 //같은 배열도 직접 값을 넣는 거랑 boolean값을 넣는 거랑 다른가보다...
+
+//인터넷에 찾아보니, boolean값은 0아니면 1이라서 1byte만 차지한다고 한다.
+//1bit가 아닌 1byte인 이유는, CPU가 1바이트보다 작은 데이터는 처리할 수 없기 때문이다.
+//주소를 매길 수 있는 최소한의 단위는 바이트다. 비트가 아니다
 const isPrimeNumber = Array(n+ 1).fill(true);
 isPrimeNumber[0] = false;
 isPrimeNumber[1] = false;
 
 for (let i = 2; i <= Math.ceil(Math.sqrt(n)); i++) {
     if (isPrimeNumber[i]) {
-        let j = 2;
+        let j = i;
         while (i * j <= n) {
             isPrimeNumber[i * j] = false;
             j++;
