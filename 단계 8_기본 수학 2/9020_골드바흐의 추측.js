@@ -1,9 +1,5 @@
-var [c, ...num] = `5
-4
-6
-8
-10
-12`.split('\n').map(Number);
+var [c, ...num] = `1
+4`.split('\n').map(Number);
 var answer = '';
 
 function eratos(n){
@@ -37,8 +33,8 @@ for(var i=0; i<c; i++){
         if(arr[n]>=input/2) break;
         else n++
     }
-    if(arr[n] + arr[n] === input){
-        answer += `${arr[n]} ${arr[n]}\n`
+    if(arr[n] + arr[n] === input || arr[n-1] + arr[n-1] === input){
+        arr[n]+arr[n]===input? answer+=`${arr[n]} ${arr[n]}\n` : answer+=`${arr[n-1]} ${arr[n-1]}\n`
     }
     else{
         while(n<arr.length){
