@@ -19,6 +19,7 @@ console.log(input);
 3. 각 부분 리스트를 재귀적으로 합병 정렬을 이용해 정렬한다.
 4. 두 부분 리스트를 다시 하나의 정렬된 리스트로 합병한다.
  */
+/*
 //1. 배열을 반씩 나누는 함수
 function mergeSort(list){
     if(list.length === 1) return list;          //배열의 길이가 1이 되면 끝낸다
@@ -39,5 +40,38 @@ function merge(left, right){
 
 var result = mergeSort(input);
 console.log(result.join('\n'));
+ */
 
 //퀵 정렬
+/*
+분할 정복 알고리즘
+1. 리스트 안의 한 요소를 선택(=pivot)
+2. 피벗을 기준으로 피벗보다 작은 것들은 왼쪽으로, 큰 것들은 오른쪽으로 이동.
+3. 왼쪽, 오른쪽을 다시 정렬(-> 순환호츌을 이용해 정렬 반복)
+4. 부분 리스트들이 더 이상 분할이 불가능할 때까지 반복(=리스트의 크기가 0이나 1이 될 때까지)
+ */
+function quickSort(list){
+    if(list.length <= 1){
+        return list;
+    }
+
+    var pivot = list[0];
+    var low = 1;
+    var high = list.length-1;
+
+    while(low<high){
+        if(list[low]>pivot){
+            var tmp = list[low];
+            list[low] = list[high];
+            list[high] = tmp;
+            high--;
+        }
+        else low++;
+    }
+    list[0] = list[low-1];
+    list[low-1] = pivot;
+
+    return [...quickSort(list.slice(0, low-1)), ...quickSort(list.slice(low, list.length))];
+}
+
+console.log(quickSort(input));
