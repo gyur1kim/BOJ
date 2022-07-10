@@ -71,3 +71,5 @@ function quickSort(list){
 }
 console.log(quickSort(input).join('\n'));
  */
+
+//힙정렬
