@@ -18,7 +18,7 @@ console.log(input);
 
 //1. 평균 구하기 -0이 나오면 안됨
 var sum = input.reduce((a, c)=> a+c, 0);
-var avg = Math.round(sum/n);
+var avg = Math.round(sum/n)+1-1;
 console.log(avg);
 
 //2. 중앙값 구하기
@@ -26,23 +26,33 @@ var median = input[Math.floor(n/2)];
 console.log(median);
 
 //3. 최빈값
-var freqArr = [0];
-var idx = 0;
-for(var i=1; i<n; i++){
-    if(input[i] !== input[i-1]){
-        freqArr[++idx] = i;
+
+var freq = input.reduce((pv, cv)=>{
+    console.log(cv);
+    pv[cv] = (pv[cv]||0)+1;
+    return pv;
+}, {});
+
+console.log(freq);
+var mostFreq = 0;
+for(var key in freq){
+    if(freq[key]>mostFreq){
+        mostFreq = freq[key];
     }
 }
-//최빈값 같은 것이 여러 개 있으면 2번째 것 출력
-for(var j=0; j<n; j++){
-    /*다음 값이랑 내꺼랑 뺀다
-    맨 마지막꺼는 n이랑 뺸당.
-    그 중에서 가장 큰 것을 찾는다
-    찾는 값이 여러 개면 두 번째에서 멈춘다.
-     */
-}
 
-console.log(freqArr);
+var cnt = 0;
+var mode = 0;
+for(var key in freq){
+    if(freq[key]===mostFreq){
+        cnt++;
+        if(cnt===2){
+            mode = key;
+            break;
+        }
+    }
+}
+console.log(mode);
 
 //4. 범위
 var max = input[n-1];
