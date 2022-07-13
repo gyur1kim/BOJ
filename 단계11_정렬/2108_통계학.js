@@ -35,7 +35,7 @@ console.log(freq);
 //키값만 따로 정렬해놓자...
 var sortedKeys = Object.keys(freq).sort((a, b)=>{return a-b});
 
-//재일 많이 나온 것의 횟수 구하기
+//제일 많이 나온 것의 횟수 구하기
 var mostFreq = 0;   //우선 0번 등장한것을 가장 많이 나온 것으로 가정
 for(var key in freq){
     if(freq[key]>mostFreq){ //key값의 value(빈도수)를 비교해 가장 많이 나온 것을 구한다.
