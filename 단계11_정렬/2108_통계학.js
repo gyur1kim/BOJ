@@ -5,15 +5,18 @@ N개의 수를 대표하는 수를 정하는 방법은 4가지가 있다.
 3. 최빈값(최빈값이 여러 개면, 두 번쨰로 작은 값 출력)
 4. 범위(최댓값과 최솟값의 차이)
  */
-var [n, ...input] = `3
-0
-0
--1`.split('\n');
+var [n, ...input] = `5
+1
+3
+8
+-2
+2`.split('\n');
 
 //정렬 후 숫자로,,
 input = input.sort((a, b)=> a-b).map(Number);
 console.log(input);
 
+/*
 //1. 평균 구하기 -0이 나오면 안됨
 var sum = input.reduce((a, c)=> a+c, 0);
 var avg = Math.round(sum/n)+1-1;
@@ -29,7 +32,7 @@ var freq = input.reduce((pv, cv)=>{
     pv[cv] = (pv[cv]||0)+1;
     return pv;
 }, {});
-//근데 출력해보면 빡치게 내가 열심히 정렬해놓은 것을 다 망쳐놓는다.
+//근데 출력해보면 빡치게 내가 열심히 정렬해놓은 것을 다 망쳐놓는다
 console.log(freq);
 
 //키값만 따로 정렬해놓자...
@@ -55,8 +58,36 @@ for(var val of sortedKeys){      //input값을 freq의 키값으로 넣으면 �
     }
 }
 console.log(mode);
+ */
 
+/*
+//인터넷 쳐보니까 Map 객체라는 게 있다. 넣는 순서대로 정렬하는 딕셔너리같은 건데 함 해볼까?
+var freq1 = new Map();
+input.forEach((value)=>{
+    freq1.has(value)? freq1.set(value, freq1.get(value)+1): freq1.set(value, 1);
+})
+console.log(freq1);     // -> Map(5) { -2 => 1, 1 => 1, 2 => 1, 3 => 1, 8 => 1 }
+for (var [key, val] of freq1){
+    console.log(key);
+    console.log(val);
+}
+ */
+
+//생각해보니까 빈도수대로 정렬하고 젤 큰 값의 key를 구하면 되는거 아닌가?
+var freq = input.reduce((pv, cv)=>{     //Object로 만들깅
+    pv[cv] = (pv[cv]||0)+1;
+    return pv;
+}, {});
+var sortedFreqs = Object.keys(freq).map(k=>freq[k].sort((a, b)=>a-b))
+console.log(sortedFreqs);
+
+
+
+
+
+/*
 //4. 범위
 var max = input[n-1];
 var min = input[0];
 console.log(max-min);
+ */
