@@ -74,14 +74,29 @@ for (var [key, val] of freq1){
  */
 
 //생각해보니까 빈도수대로 정렬하고 젤 큰 값의 key를 구하면 되는거 아닌가?
-var freq = input.reduce((pv, cv)=>{     //Object로 만들깅
-    pv[cv] = (pv[cv]||0)+1;
-    return pv;
-}, {});
-var sortedFreqs = Object.keys(freq).map(k=>freq[k].sort((a, b)=>a-b))
-console.log(sortedFreqs);
+//Object로 만들깅
+var freq1 = new Map();
+input.forEach((value)=>{
+    freq1.has(value)? freq1.set(value, freq1.get(value)+1): freq1.set(value, 1);
+})
+console.log(freq1);
 
+//array에 넣기
+var most = 0;
+for(var [key, val] of freq1){
+    if(most < val) most = val;
+}
 
+var cnt = 0;
+var mode = 0;
+for(var [key, val] of freq1){
+    if(val === most){
+        cnt++;
+        mode = key;
+        if(cnt === 2) break;
+    }
+}
+console.log(mode);
 
 
 
