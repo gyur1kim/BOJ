@@ -24,6 +24,7 @@ words.forEach((v)=>{
 console.log(sortedWords.filter(x=>x.length>0).map(x=>x.join('\n')).join('\n'));
  */
 
+//더 짤막하고 간결하게 완성,,!
 var [n, ...words] = `13
 but
 i
@@ -39,11 +40,6 @@ wait
 im
 yours
 `.trim().split('\n');
-var unsortedWords = new Set(words.map(x=>x.trim()));
-var sortedWords = Array.from(Array(51), ()=> new Array(0));
-unsortedWords.forEach((v)=>{
-    sortedWords[v.length].push(v);
-    sortedWords[v.length].sort();
-});
-console.log(sortedWords);
-console.log(sortedWords.filter(x=>x.length>0).map(x=>x.join('\n')).join('\n'));
+var unsortedWords = Array.from(new Set(words.map(x=>x.trim())));
+sortedWords = unsortedWords.sort().sort((a, b)=> a.length-b.length);
+console.log(sortedWords.join('\n'));
