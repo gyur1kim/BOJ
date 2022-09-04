@@ -1,30 +1,14 @@
-function GCD(big, small){
-    let s = small;
-    let GCD = 1;
-    while(true){
-        let n = big%s;
-        if(n===0){
-            GCD = s;
-            break;
-        }
-        else{
-            s = n;
-        }
-    }
-    return (small*big)/GCD;
-}
-
-let [tc, ...input] = `3
+let [tc, ...input] = `4
 1 45000
 6 10
-13 17`.split('\n');
-
-for(let i=0; i<Number(tc); i++){
-    let [A, B] = input[i].split(' ').map(Number);
-    if(B > A){
-        console.log(GCD(B, A));
+13 17
+322 322`.split('\n');
+for(v of input){
+    let [A, B] = v.split(' ').map(Number);
+    if(A < B){
+        [B, A] = [A, B];
     }
-    else{
-        console.log(GCD(A, B));
-    }
+    const gcd = (A, B) => A % B === 0 ? B : gcd(B, A % B);
+    const lcm = (A, B) => A * B / gcd(A, B);
+    console.log(lcm(A, B));
 }
