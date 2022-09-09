@@ -13,13 +13,14 @@ function GCD(a, b){
         b = r;
     }
     if(a===1) return 1;
-    else return 0;
+    return 0;
 }
 
 input = input.split(' ').map(Number);
+X = Number(X);
 const lst = [];
 for(let i=0; i<+N; i++){
-    if(GCD(input[i], +X)){
+    if(GCD(input[i], X)){
         lst.push(input[i]);
     }
 }
