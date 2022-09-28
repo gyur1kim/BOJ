@@ -1,5 +1,3 @@
 let X = +`48`;
-
 let b = new Array(...X.toString(2));
-let res = b.reduce((a, c)=> a+ +c, 0);
-console.log(res);
+console.log(b.reduce((a, c)=> a+ +c, 0));
