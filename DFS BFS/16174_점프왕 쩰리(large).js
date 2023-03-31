@@ -34,3 +34,5 @@ while (start < queue.length) {
   }
 }
 console.log(check? "HaruHaru" : "Hing");
+
+// 틀린게 아니라 입력받을 때 쉼표를 마침표로 찍어서 생긴 에러였음...
