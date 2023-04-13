@@ -21,19 +21,18 @@ console.log(computerArr);
 
 function BFS () {
   const visited = Array(+computerNum+1).fill(false);
-  const queue = computerArr[1];     // 1번 컴퓨터보터 볼게요
-  visited[1] = true;
+  const queue = [1];     // 1번 컴퓨터보터 볼게요
   let head = 0;
   let count = 0;
 
   while (head < queue.length) {
     let computer = queue[head++];
-    if (visited[computer]) continue;
+    visited[computer] = true;
 
-    count++;
+
     for (let neighbor of computerArr[computer]) {
       if (!visited[neighbor]) {
-        visited[neighbor] = true;
+        count++;
         queue.push(neighbor);
       }
     }
@@ -41,3 +40,5 @@ function BFS () {
 
   return count;
 }
+
+console.log(BFS());
