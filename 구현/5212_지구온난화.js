@@ -1,15 +1,13 @@
-let [row, col, ...presentMap] = `5 3
-...
-.X.
-.X.
-.X.
-...`.split(/\s+/);
+let [rc, ...presentMap] = `3 10
+..........
+..XXX.XXX.
+XXX.......`.split('\n');
+let [row, col] = rc.split(' ').map(Number);
 
-console.log(presentMap);
+presentMap.push('.'.repeat(col));
+presentMap.unshift('.'.repeat(col));
 presentMap = presentMap.map(line => '.' + line + '.');
-presentMap.push('.'.repeat(+col+2));
-presentMap.unshift('.'.repeat(+col+2));
-console.log(presentMap);
+console.log(presentMap);   // 바다로 한 번 더 감싼 현재 지도
 
 /*
  * 일단 바다(.)로 한 번 더 감쌌습니다.
@@ -25,18 +23,50 @@ console.log(presentMap);
  */
 
 const directions = [[0, -1], [1, 0], [0, 1], [-1, 0]];
-const futureMap = [];
-const checkRowCnt = [];
-const checkColCnt = [];
+const tmpFutureMap = new Array(row).fill('');
+const checkRowCnt = new Array(row).fill(0);
+const checkColCnt = new Array(col).fill(0);
 for (let i=1; i<=row; i++) {
   for (let j=1; j<=col; j++) {
-    let cntLand = 0;
-    for (const direction of directions) {
-      if (presentMap[i+direction[0]][j+direction[1]] === 'X'){ cntLand++; }
-    }
-
-    if (cntLand >= 2) {
+    if (presentMap[i][j] === '.') {   // 현재도 바다면 미래도 바다겠죠..?
+      tmpFutureMap[i-1] +='.';
 
     }
+    else {   // 현재가 땅이면 주변에 땅의 갯수를 구합니다. 땅이 2개 이상이면 미래에도 육지일 것이여요
+      let cntLand = 0;
+      for (const direction of directions) {
+        if (presentMap[i+direction[0]][j+direction[1]] === 'X'){ cntLand++; }
+      }
+      if (cntLand >= 2) {     // 50년 뒤에도 섬이라는 뜻
+        tmpFutureMap[i-1]+='X'
+        checkRowCnt[i-1]++;
+        checkColCnt[j-1]++;
+      }
+      else {                 // 50년 뒤에는 바다가 된다는 뜻
+        tmpFutureMap[i-1]+='.'
+      }
+    }
+    console.log(tmpFutureMap[i-1]);
+    console.log(tmpFutureMap)
   }
 }
+
+console.log(tmpFutureMap);
+console.log(checkRowCnt);
+console.log(checkColCnt);
+
+let rowStart = 0; let rowEnd = row-1;
+let colStart = 0; let colEnd = col-1;
+while (checkRowCnt[rowStart] === 0) rowStart++;
+while (checkRowCnt[rowEnd] === 0) rowEnd--;
+while (checkColCnt[colStart] === 0) colStart++;
+while (checkColCnt[colEnd] === 0) colEnd--;
+
+console.log(rowStart, rowEnd, colStart, colEnd);
+
+const futureMap = [];
+for (let i=rowStart; i<rowEnd+1; i++) {
+  let tmpLine = tmpFutureMap[i]
+  futureMap.push(tmpLine.slice(colStart, colEnd+1))
+}
+console.log(futureMap.join('\n'));
