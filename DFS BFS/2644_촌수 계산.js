@@ -36,26 +36,45 @@ function solution(input) {
   }
   console.log(BFamily);
 
-  if (BFamily[BFamily.length-1] !== AFamily[AFamily.length-1]) {
+  if (BFamily.pop() !== AFamily.pop()) {
     return -1
   }
   else {
-    for (let i=0; i<AFamily.length; i++) {
-      for (let j=0; j<BFamily.length; j++) {
-        if (AFamily[i] === BFamily[j]) {
-          return (i+j);
-        }
+    while (BFamily.length && AFamily.length) {
+      if (BFamily.pop() !== AFamily.pop()) {
+        return Math.abs(AFamily.length + BFamily.length) + 2
       }
     }
+    return Math.abs(AFamily.length - BFamily.length);
+
+
+    // for (let i=0; i<AFamily.length; i++) {
+    //   for (let j=0; j<BFamily.length; j++) {
+    //     if (AFamily[i] === BFamily[j]) {
+    //       return (i+j);
+    //     }
+    //   }
+    // }
   }
 }
 
-console.log(solution(`4
+console.log(solution(`16
+1 10
+1
 1 2
-3
-1 2
-2 3
-3 4`));
+1 3
+1 4
+2 5
+3 6
+3 7
+4 8
+4 9
+4 10
+8 15
+15 16
+11 12
+11 13
+11 14`));
 
 /*
  * 내가 생각한 방식은
@@ -68,4 +87,11 @@ console.log(solution(`4
  * ---
  * 주어진 n의 크기가 작기 때문에 (100) 이중for문을 돌려도 크게 문제되지 않았다.
  * 하지만 다른 사람들의 코드도 분석하며 dfs로 푸는 방법도 연구해봐야겠다.
+ */
+
+/*
+ * 2023-04-25 2중for문으로 안풀어도 되는 방법을 찾았다...!!
+ * 뒤에서부터 비교하면서 부모가 달라지는 부분을 찾으면 되지 않나
+ * pop을 이용해 풀어보았지만 시간은 여전히 124ms이다.
+ * 2중 for문이 아니라 빠를 줄 알았는데 아쉽다.
  */
