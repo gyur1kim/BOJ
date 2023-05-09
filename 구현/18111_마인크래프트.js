@@ -56,7 +56,7 @@ function solution1 (N, M, B, ground) {
 }
 
 // 더 느려짐... 52864KB, 448ms
-function solution (N, M, B, ground) {
+function solution2 (N, M, B, ground) {
   let maxHeight = 0;
   let time = 500 * 500 * 256 * 3;
 
@@ -98,6 +98,48 @@ function solution (N, M, B, ground) {
 
   return `${time} ${maxHeight}`;
 }
+
+function solution (N, M, B, ground) {
+  let maxHeight = 0;
+  let time = 500 * 500 * 256 * 3;
+
+  let blocks = ground.reduce((acc, cur) => acc + cur, 0);
+  let empties = 0;
+
+  for (let h = 0; h <= 256; h++) {
+    let tmpHeight = h;
+    let tmpTime = time;
+
+    for (let i=0; i<ground.length; i++) {
+      if (ground[i] < h) {    // 현재 기준이되는 높이보다 땅이 낮으면?
+        empties++;
+      }
+      else {    // 현재 기준이 되는 높이보다 땅이 높으면?
+        h > 0 && blocks--;
+      }
+    }
+
+    console.log(`h: ${h}, empties: ${empties}, blocks: ${blocks}`)
+
+    if ( empties <= B + blocks ) {        // 빈 공간을 채울 수 있는 경우, 깎아서 쓰든지 인벤토리에서 갖다 쓰든지...
+      tmpTime = empties + blocks * 2;
+    }
+    else {                               // 빈 공간을 채울 수 없는 경우.. 이럴땐 어떡해
+      tmpTime = time;
+      tmpHeight = maxHeight;
+    }
+
+    console.log(`tmpTime: ${tmpTime}`)
+    if (tmpTime <= time) {
+      maxHeight = tmpHeight;
+      time = tmpTime;
+    }
+    console.log(`==================================`)
+  }
+
+  return `${time} ${maxHeight}`;
+}
+
 
 let [N, M, B, ...ground] = `2 2 68
 120 90
