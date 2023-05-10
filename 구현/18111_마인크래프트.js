@@ -146,6 +146,8 @@ function solution3 (N, M, B, ground) {
 
 // 고수의 코드를 보자..
 // https://www.acmicpc.net/source/55957318
+// 고수의 코드였는데도 오래 걸렸다. 왜지?
+// 49100KB, 300ms
 function solution (N, M, B, ground) {
 
   // 1. 각 높이의 블록이 몇 개 있는지 구함
@@ -168,7 +170,7 @@ function solution (N, M, B, ground) {
   console.log(arr)
 
   // 3. 이제 직접 0부터 최고 높이까지 돌아봅시다
-  let maxHeight = arr[arr.length - 1];
+  let maxHeight = arr.length - 1;
   let time = 500 * 500 * 256 * 3;
   let H = -1;
 
@@ -185,7 +187,7 @@ function solution (N, M, B, ground) {
       if (j > i) {
         remove += arr[j] * (j - i);
       }
-      else if (j == i) inventory += remove;
+      else if (j === i) inventory += remove;
       else {
         empty += arr[j] * (i - j);
         if (empty > inventory) {
@@ -207,8 +209,10 @@ function solution (N, M, B, ground) {
 }
 
 
-let [N, M, B, ...ground] = `2 2 68
-120 90
-250 170`.split(/\s+/).map(Number);
+let [N, M, B, ...ground] = `4 4 36
+15 43 61 21
+19 33 31 55
+48 63 1 30
+31 28 3 8`.split(/\s+/).map(Number);
 
 console.log(solution(N, M, B, ground))
