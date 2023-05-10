@@ -148,7 +148,7 @@ function solution3 (N, M, B, ground) {
 // https://www.acmicpc.net/source/55957318
 // 고수의 코드였는데도 오래 걸렸다. 왜지?
 // 49100KB, 300ms
-function solution (N, M, B, ground) {
+function solution4 (N, M, B, ground) {
 
   // 1. 각 높이의 블록이 몇 개 있는지 구함
   let arr = Array(257).fill(0);
@@ -208,11 +208,59 @@ function solution (N, M, B, ground) {
   return `${time} ${H}`;
 }
 
+function solution (N, M, B, ground) {
 
-let [N, M, B, ...ground] = `4 4 36
+  // 1. 각 높이의 블록이 몇 개 있는지 구함
+  const map = {};
+  ground.forEach((v)=>{
+    v.forEach((vv)=>{
+      if(map[vv]){
+        map[vv]++;
+      } else {
+        map[vv]=1;
+      }
+    });
+  });
+
+  let maxHeight=0;
+  let minSeconds=64*10000000;
+  for(let i=0; i<=256; i++){
+    const height = i;
+
+    let push=0;
+    let pop=0;
+    for(const h in map){
+      const blockCnt = map[h];
+      if(h > height){
+        // 인벤토리에 넣기
+        push += (h-height)*blockCnt;
+      } else if(h < height){
+        // 인벤토리에 빼기
+        pop += (height-h)*blockCnt;
+      }
+    }
+
+    // 인벤토리 총 블록 수가 꺼낼 블록 수보다 작을 경우
+    if(B + push < pop)
+      continue;
+
+    const seconds = push*2 + pop;
+    if(seconds <= minSeconds){
+      // 같아도 높이가 높은 것으로 갱신
+      minSeconds = seconds;
+      maxHeight = height;
+    }
+  }
+  return `${minSeconds} ${maxHeight}`;
+
+}
+
+
+let [...input] = `4 4 36
 15 43 61 21
 19 33 31 55
 48 63 1 30
-31 28 3 8`.split(/\s+/).map(Number);
-
+31 28 3 8`.split('\n');
+let [N, M, B] = input[0].split(' ').map(Number);
+let ground = input.filter((val, idx) => idx !== 0).map((v) => v.split(' ').map(Number));
 console.log(solution(N, M, B, ground))
