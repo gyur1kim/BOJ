@@ -1,12 +1,14 @@
-let dp = [0, 1, 2];
+let dp = [0, 1, 2, 3];
 let n = parseInt(`9`);
 
-if (n < dp.length){
-  console.log(dp[n]);
+// 9660KB, 188ms
+while (dp.length <= n) {
+  dp.push((dp[dp.length-1] + dp[dp.length-2]) % 10007);
 }
-else {
-  while (dp.length <= n) {
-    dp.push(dp[dp.length-1] + (dp[dp.length-2] * 2));
-    console.log(dp);
-  }
+
+// 	9648KB, 196ms
+for (let i=4; i<=n; i++) {
+  dp[i] = (dp[i-1] + dp[i-2]) % 10007;
 }
+
+console.log(dp[n]);
