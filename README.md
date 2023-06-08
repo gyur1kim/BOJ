@@ -1,7 +1,17 @@
 # 알고리즘 마스터를 향해
 
+<details>
+<summary style="font-size: 20px">DFS, BFS</summary>
+<div markdown="1">
 
-<details open>
+|     날짜     |          단계          |                    백준 링크                     |                                                                                        github 링크                                                                                        |   메모리   |  시간   |
+|:----------:|:--------------------:|:--------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-------:|:-----:|
+| 2023-06-07 | ![](TIER_IMG/S1.svg) | [2667](https://www.acmicpc.net/problem/2667) |                                             [단지번호붙이기](https://github.com/gyur1kim/BOJ/blob/master/DFS%20BFS/2667_단지번호붙이기)                                             | 10668KB | 124ms |
+
+</div>
+</details>
+
+<details>
 <summary style="font-size: 20px">DP</summary>
 <div markdown="1">
 
