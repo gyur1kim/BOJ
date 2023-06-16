@@ -1,18 +1,18 @@
-let [NM, ...lab] = `8 8
-2 0 0 0 0 0 0 2
-2 0 0 0 0 0 0 2
-2 0 0 0 0 0 0 2
-2 0 0 0 0 0 0 2
-2 0 0 0 0 0 0 2
-0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0`.split('\n');
+let [NM, ...lab] = `7 7
+2 0 0 0 1 1 0
+0 0 1 0 1 2 0
+0 1 1 0 1 0 0
+0 1 0 0 0 0 0
+0 0 0 0 0 1 1
+0 1 0 0 0 0 0
+0 1 0 0 0 0 0`.split('\n');
 
 let [N, M] = NM.split(' ').map(Number);         // 세로 가로 크기
 lab = lab.map(r => r.split(' ').map(Number));   // 연구실
 let directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];    // 방향
 let safeZone = 0;                                       // 안전지대 최대 수를 저장할 변수
 
+/** 기존의 방식
 function bfs() {
   const copyLab = lab.map(r => [...r]);       // 연구실 복사(실제 연구실 값을 변경하면 안됨)
   const queue = [];      // 바이러스(2)가 퍼져나가는 좌표를 담는 배열
@@ -46,7 +46,7 @@ function bfs() {
   return emptySpace;
 }
 
-/** 백트래킹, 벽을 한 번씩 다 세워본다. */
+// 백트래킹, 벽을 한 번씩 다 세워본다.
 function MakeWall(count) {
   if (count === 3) {          // 벽 3개를 세운 것이다 => bfs 시작
     let emptySpace = bfs();   // bfs 결과로 나오는 안전지대 저장
@@ -66,3 +66,62 @@ function MakeWall(count) {
 
 MakeWall(0);
 console.log(safeZone);
+*/
+
+function spreadVirus() {
+  const copyLab = lab.map(r => [...r]);
+  let count = 0;                  // 바이러스에 감염된 영역을 담는 변수
+  for (let [x, y] of wallArr) {   // 벽 세우기
+    copyLab[x][y] = 1;
+  }
+
+  for (let virus of virusArr) {  // 바이러스 시초부터 뿌려보기
+    const queue = [virus];
+    let head = 0;
+
+    // bfs
+    while (queue.length > head) {
+      let [x, y] = queue[head++];
+      for (let [dx, dy] of directions) {
+        let [nx, ny] = [x+dx, y+dy];
+        if (0<=nx && nx<N && 0<=ny && ny<M && copyLab[nx][ny] === 0) {
+          copyLab[nx][ny] = 2;
+          queue.push([nx, ny]);
+          count++;
+        }
+      }
+    }
+  }
+
+  let tmpSafeZone = spaceArr.length - 3 - count;
+  if (tmpSafeZone > safeZone) safeZone = tmpSafeZone;
+}
+
+// 1. 전체적으로 돌면서 0이었던 곳의 좌표, 2였던 곳의 좌표를 구한다.
+const spaceArr = [];
+const virusArr = [];
+
+for (let i=0; i<N; i++) {
+  for (let j=0; j<M; j++) {
+    if (lab[i][j] === 0) spaceArr.push([i, j]);
+    else if (lab[i][j] === 2) virusArr.push([i, j]);
+  }
+}
+
+// 2. 벽 세운 곳의 좌표를 담는다.
+const wallArr = [];
+for (let i=0; i<spaceArr.length; i++) {
+  wallArr.push(spaceArr[i]);
+  for (let j=i+1; j<spaceArr.length; j++) {
+    wallArr.push(spaceArr[j]);
+    for (let k=j+1; k<spaceArr.length; k++) {
+      wallArr.push(spaceArr[k]);
+      // 여기서 bfs 실행
+      spreadVirus()
+      wallArr.pop();
+    }
+    wallArr.pop();
+  }
+  wallArr.pop();
+}
+console.log(safeZone)
