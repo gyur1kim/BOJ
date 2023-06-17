@@ -1,33 +1,5 @@
-let [n, ...input] = `10
-1
-13
-12
-15
-3
-16
-13
-12
-14
-15`.split('\n')
-
-// function Round(n) {
-//   console.log(n)
-//   if (n === "0") {
-//     return 0
-//   }
-//   let [int, dec] = n.split(".");
-//   if (dec && parseInt(dec[0]) > 5 ) return parseInt(int) + 1;
-//   else return parseInt(int);
-// }
-//
-// let cut = Round((n*0.15).toString());
-// console.log(cut);
-// n = +n;
-// input = input.map(Number).sort((a, b) => a-b);
-// input.splice(0, cut);
-// input.splice(-cut, cut);
-// console.log(input);
-// console.log(n ? Round((input.reduce((acc, cur) => acc + cur, 0)/input.length).toString()) : 0);
+let [n, ...input] = `1
+10`.split('\n')
 
 n = +n;
 if (n === 0) {
@@ -42,3 +14,5 @@ else {
   let count = input.length;
   console.log(Math.round(sum / count));
 }
+
+// input 받을 때 trim 안해서 틀린 것이었다.
