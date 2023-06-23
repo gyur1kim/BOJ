@@ -34,10 +34,11 @@
 <summary style="font-size: 20px">구현</summary>
 <div markdown="1">
 
-|     날짜     |          단계          |                     백준 링크                      |                               github 링크                               |  메모리   |   시간   |
-|:----------:|:--------------------:|:----------------------------------------------:|:---------------------------------------------------------------------:|:------:|:------:|
-| 2023-06-13 | ![](TIER_IMG/G4.svg) | [14502](https://www.acmicpc.net/problem/14502) |    [연구소](https://github.com/gyur1kim/BOJ/blob/master/구현/14502_연구소)    | 16472KB | 928ms |
+|     날짜     |          단계          |                     백준 링크                      |                                   github 링크                                    |  메모리   |   시간   |
+|:----------:|:--------------------:|:----------------------------------------------:|:------------------------------------------------------------------------------:|:------:|:------:|
+| 2023-06-13 | ![](TIER_IMG/G4.svg) | [14502](https://www.acmicpc.net/problem/14502) |        [연구소](https://github.com/gyur1kim/BOJ/blob/master/구현/14502_연구소)         | 16472KB | 928ms |
 | 2023-06-18 | ![](TIER_IMG/S4.svg) | [18110](https://www.acmicpc.net/problem/18110) | [solved.ac](https://github.com/gyur1kim/BOJ/blob/master/구현/18110_solved.ac.js) | 	39884KB | 352ms |
+| 2023-06-22 | ![](TIER_IMG/G5.svg) |   [15686](https://www.acmicpc.net/problem/15686)   |   [치킨 배달](https://github.com/gyur1kim/BOJ/blob/master/구현/15686_치킨%20배달)   | 	12648KB | 208ms |
 
 </div>
 </details>
