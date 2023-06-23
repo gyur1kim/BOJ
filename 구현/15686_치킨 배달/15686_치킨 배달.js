@@ -33,7 +33,6 @@ let chickenDist = Number.MAX_SAFE_INTEGER;
 const chickenCoord = [];        // 전체 치킨집 좌표
 const selectChickenCoord = [];  // 선택된 치킨집 좌표
 const houseCoord = [];          // 집 좌표
-// let countHouse = 0;             // 집 개수
 
 // 치킨집의 위치와 집의 위치 기억하기.
 for (let i=0; i<N; i++) {
@@ -44,9 +43,7 @@ for (let i=0; i<N; i++) {
   }
 }
 
-
 // const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
-
 // function bfs() {
 //   let tmpChickenDist = 0;   // 임시 치킨거리
 //   let countHouseCopy = countHouse;  // 임시 집 개수
@@ -81,10 +78,10 @@ for (let i=0; i<N; i++) {
 //   if (tmpChickenDist < chickenDist) chickenDist = tmpChickenDist;
 //
 // }
+
 function calcDist(x1, y1, x2, y2) {
   return Math.abs(x1-x2) + Math.abs(y1-y2);
 }
-
 
 function getChickenDist () {
   let dist, tmpChickenDist = 0;
@@ -107,17 +104,14 @@ function getChickenDist () {
 function chooseChicken (count, idx) {
   if (count === M) {
     // 치킨집 다 정했으니까 치킨거리 구하기;
-    // bfs();
     getChickenDist();
     return;
   }
 
   for (let i=idx; i<chickenCoord.length; i++) {
-    // if (!selectChickenCoord.includes(chickenCoord[i])) {
-      selectChickenCoord.push(chickenCoord[i]);
-      chooseChicken(count+1, i+1);  // 살아남을 치킨집에 추가
-      selectChickenCoord.pop();      // 빼기
-    // }
+    selectChickenCoord.push(chickenCoord[i]);
+    chooseChicken(count+1, i+1);  // 살아남을 치킨집에 추가
+    selectChickenCoord.pop();      // 빼기
   }
 }
 chooseChicken(0, 0);
