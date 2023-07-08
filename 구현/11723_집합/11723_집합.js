@@ -26,28 +26,52 @@ check 1
 toggle 1
 check 1`.split('\n');
 
-let set = new Set();
-
+// let set = new Set();
+//
+// for (let i=0; i<n; i++) {
+//   let [command, val] = commands[i].split(' ');
+//   switch (command) {
+//     case 'add':
+//       set.add(+val);
+//       break;
+//     case 'remove':
+//       set.delete(+val)
+//       break;
+//     case 'check':
+//       set.has(+val)? console.log(1) : console.log(0);
+//       break;
+//     case 'toggle':
+//       set.has(+val)? set.delete(+val) : set.add(+val);
+//       break;
+//     case 'all':
+//       for (let i=1; i<21; i++) set.add(i);
+//       break;
+//     case 'empty':
+//       set.clear();
+//       break;
+//   }
+// }
+let s = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 for (let i=0; i<n; i++) {
   let [command, val] = commands[i].split(' ');
   switch (command) {
     case 'add':
-      set.add(+val);
+      s[+val] = 1
       break;
     case 'remove':
-      set.delete(+val)
+      s[+val] = 0
       break;
     case 'check':
-      set.has(+val)? console.log(1) : console.log(0);
+      s[+val]? console.log(1) : console.log(0);
       break;
     case 'toggle':
-      set.has(+val)? set.delete(+val) : set.add(+val);
+      s[+val] = 1 - s[+val];
       break;
     case 'all':
-      for (let i=1; i<21; i++) set.add(i);
+      s = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
       break;
     case 'empty':
-      set.clear();
+      s = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       break;
   }
 }
