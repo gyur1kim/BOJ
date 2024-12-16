@@ -32,62 +32,70 @@ class Queue {
   }
 }
 
-let [NM, ...infos] = `3 7
-32 62
-42 68
-12 98
-95 13
-97 25
-93 37
-79 27
-75 19
-49 47
-67 17`.split("\n");
-
+let [NM, ...infos] = `4 9
+8 52
+6 80
+26 42
+2 72
+51 19
+39 11
+37 29
+81 3
+59 5
+79 23
+53 7
+43 33
+77 21`.split("\n");
 let [N, M] = NM.split(" ");
-let ladderSnake = new Map();
 
+let ladderSnake = new Map();
 for (const info of infos) {
   let [from, to] = info.split(" ").map(Number);
   ladderSnake.set(from, to);
 }
 
-// 최단거리니까 BFS로 접근하자.
+// visited는 여기 번호판까지 왔을 때 던진 주사위 횟수를 저장한다
 let visited = new Array(101).fill(0);
 const queue = new Queue();
-// 번호와 주사위 굴린 횟수
-queue.enqueue([1, 0]);
+// 번호를 넣어주자
+queue.enqueue(1);
 
 while (true) {
-  let [current, count] = queue.dequeue();
-
-  // console.log("현재", current, "주사위횟수", count);
-
-  // 방문했던 곳이면 걍 넘겨
-  if (visited[current]) continue;
-
-  // 현재 숫자 방문 처리하기
-  visited[current] = 1;
-
-  // 사다리 or 뱀 있는지 확인
-  if (ladderSnake.has(current)) {
-    current = ladderSnake.get(current);
-    visited[current] = 1;
-  }
+  let current = queue.dequeue();
 
   if (current === 100) {
     // BFS인데 100이면 끝이지~
-    console.log(count);
+    // console.log(visited);
+    console.log(visited[current]);
     break;
   }
 
-  queue.enqueue([current + 1, count + 1]);
-  queue.enqueue([current + 2, count + 1]);
-  queue.enqueue([current + 3, count + 1]);
-  queue.enqueue([current + 4, count + 1]);
-  queue.enqueue([current + 5, count + 1]);
-  queue.enqueue([current + 6, count + 1]);
+  // 사다리 or 뱀 있으면 이동해용
+  if (ladderSnake.has(current)) {
+    let next = ladderSnake.get(current);
+
+    if (visited[next]) {
+      visited[next] = Math.min(visited[current], visited[next]);
+    } else {
+      visited[next] = visited[current];
+    }
+
+    queue.enqueue(next);
+    continue;
+  }
+
+  for (let i = 1; i <= 6; i++) {
+    // 다음 번호 (현재 + 주사위 1~6 중에 하나 더한 값값)
+    const next = current + i;
+
+    // 안가봤거나 다음 번호판의 주사위 횟수가 현재보다 크면 갱신해서 다시 ㄱㄱ
+    if (visited[next] === 0 || visited[next] > visited[current] + 1) {
+      visited[next] = visited[current] + 1;
+      queue.enqueue(next);
+    }
+  }
 }
+
 // 주사위 1부터 6까지 돌려봥
 // move(start + 1, 1);
 // move(start + 2, 1);
