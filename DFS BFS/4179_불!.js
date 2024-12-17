@@ -17,40 +17,29 @@ class Queue {
     return item;
   }
 
-  size() {
-    return Object.entries(this.items).length;
+  isEmpty() {
+    return this.tailIndex - this.headIndex === 0;
+  }
+
+  values() {
+    return Object.values(this.items);
   }
 }
 
 const [RC, ...maze] = `7 7
-F....F.
-.##.##.
-.##.##.
-...J...
-.##.##.
-.##.##.
-F....F.`.split("\n");
+....#.#
+....#.#
+....#.#
+#####.#
+.....J.
+#######
+.......`.split("\n");
 
 // row사이즈(행) col 사이즈(열)
 const [R, C] = RC.split(" ").map(Number);
 
-const visited = Array(R)
-  .fill()
-  .map(() => Array(C).fill(0));
-
-const jihoonQueue = new Queue();
-const fireQueue = new Queue();
-
-for (let i = 0; i < R; i++) {
-  for (let j = 0; j < C; j++) {
-    if (maze[i][j] === "F") {
-      fireQueue.enqueue([i, j]);
-      visited[i][j] = 1;
-    } else if (maze[i][j] === "J") {
-      jihoonQueue.enqueue([i, j]);
-      visited[i][j] = 1;
-    }
-  }
+function checkOutOfRange(nr, nc) {
+  return nr < 0 || nr >= R || nc < 0 || nc >= C;
 }
 
 const directions = [
@@ -60,42 +49,65 @@ const directions = [
   [0, -1],
 ];
 
-// 불 먼저 퍼트려봐봐
-while (fireQueue.size()) {
-  const [r, c] = fireQueue.dequeue();
+const visited = Array(R)
+  .fill()
+  .map(() => Array(C).fill(-1));
 
-  for (let i = 0; i < 4; i++) {
-    const [nextR, nextC] = [directions[i][0] + r, directions[i][1] + c];
-    // R, C 범위 밖이면 건너뛰어
-    if (nextR < 0 || nextR >= R || nextC < 0 || nextC > C) continue;
-    // 못 가는 길이면 건너뛰어
-    if (maze[nextR][nextC] !== ".") continue;
-    // 이미 불 번졌으면 건너뛰어
-    if (visited[nextR][nextC]) continue;
+const jihoonQueue = new Queue();
+const fireQueue = new Queue();
 
-    visited[nextR][nextC] = visited[r][c] + 1;
-    fireQueue.enqueue([nextR, nextC]);
+for (let i = 0; i < R; i++) {
+  for (let j = 0; j < C; j++) {
+    if (maze[i][j] === "F") {
+      fireQueue.enqueue([i, j]);
+      visited[i][j] = 0;
+    } else if (maze[i][j] === "J") {
+      jihoonQueue.enqueue([i, j]);
+    }
   }
 }
 
+// 불 먼저 퍼트려봐봐
+while (!fireQueue.isEmpty()) {
+  const [r, c] = fireQueue.dequeue();
+
+  for (let i = 0; i < 4; i++) {
+    const [nr, nc] = [directions[i][0] + r, directions[i][1] + c];
+    // R, C 범위 밖이면 건너뛰어
+    if (checkOutOfRange(nr, nc)) continue;
+    // 못 가는 길이면 건너뛰어
+    if (maze[nr][nc] === "#" || maze[nr][nc] === "F") continue;
+    // 이미 불 번졌으면 건너뛰어
+    if (visited[nr][nc] !== -1) continue;
+
+    visited[nr][nc] = visited[r][c] + 1;
+    fireQueue.enqueue([nr, nc]);
+  }
+}
+
+console.log(visited);
+
 // 그다음 지훈이 함 움직여봐라
-while (jihoonQueue.size()) {
+jihoonQueue.values().map(([i, j]) => (visited[i][j] = 0));
+
+while (!jihoonQueue.isEmpty()) {
   const [r, c] = jihoonQueue.dequeue();
 
   for (let i = 0; i < 4; i++) {
-    const [nextR, nextC] = [directions[i][0] + r, directions[i][1] + c];
+    const [nr, nc] = [directions[i][0] + r, directions[i][1] + c];
     // R, C 범위 밖이면 넌 살아난겨 나가라
-    if (nextR < 0 || nextR >= R || nextC < 0 || nextC > C) {
-      console.log(visited[r][c]);
+    if (checkOutOfRange(nr, nc)) {
+      console.log(visited[r][c] + 1);
       return;
     }
     // 못 가는 길이면 건너뛰어
-    if (maze[nextR][nextC] !== ".") continue;
+    if (maze[nr][nc] !== ".") continue;
     // 이미 불 번졌으면 건너뛰어
-    if (visited[nextR][nextC] <= visited[r][c] + 1) continue;
+    if (visited[nr][nc] !== -1 && visited[nr][nc] <= visited[r][c] + 1)
+      continue;
 
-    visited[nextR][nextC] = visited[r][c] + 1;
-    jihoonQueue.enqueue([nextR, nextC]);
+    visited[nr][nc] = visited[r][c] + 1;
+    jihoonQueue.enqueue([nr, nc]);
   }
 }
 
