@@ -61,6 +61,7 @@ function main() {
 
     while (!queue.isEmpty()) {
       const [r, c] = queue.dequeue();
+      let isInQueue = false;
       map[r][c] = newLabel;
 
       for (let d = 0; d < 4; d++) {
@@ -69,8 +70,9 @@ function main() {
         if (checkOutOfRange(nr, nc)) continue;
 
         // 주변 칸이 바다임 => 현재 칸은 섬과 바다의 경계면임
-        if (map[nr][nc] === 0) {
+        if (map[nr][nc] === 0 && !isInQueue) {
           sideQueue.enqueue([r, c]);
+          isInQueue = true;
           continue;
         }
 
