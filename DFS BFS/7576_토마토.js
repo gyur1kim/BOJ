@@ -1,3 +1,27 @@
+class Queue {
+  constructor() {
+    this.items = {};
+    this.headIndex = 0;
+    this.tailIndex = 0;
+  }
+
+  enqueue(item) {
+    this.items[this.tailIndex] = item;
+    this.tailIndex += 1;
+  }
+
+  dequeue() {
+    const item = this.items[this.headIndex];
+    delete this.items[this.headIndex];
+    this.headIndex += 1;
+    return item;
+  }
+
+  isEmpty() {
+    return this.tailIndex - this.headIndex === 0;
+  }
+}
+
 function main() {
   const input = `3 3
 0 0 0
@@ -10,7 +34,7 @@ function main() {
 
   let countUnripeTomato = 0;
 
-  const queue = [];
+  const queue = new Queue();
 
   // 일단 초기 상태에서 토마토 검사
   for (let i = 0; i < N; i++) {
@@ -18,13 +42,13 @@ function main() {
       if (tomatoes[i][j] === 0) {
         countUnripeTomato++;
       } else if (tomatoes[i][j] === 1) {
-        queue.push([i, j]);
+        queue.enqueue([i, j]);
       }
     }
   }
 
   // 안익은 토마토는 있는데 익은 토마토가 없으면 -1
-  if (queue.length === 0 && countUnripeTomato) {
+  if (queue.isEmpty() && countUnripeTomato) {
     return -1;
   }
 
@@ -54,8 +78,8 @@ function main() {
 
     let day = -Infinity;
 
-    while (queue.length) {
-      const [r, c] = queue.shift();
+    while (!queue.isEmpty()) {
+      const [r, c] = queue.dequeue();
 
       for (let d = 0; d < 4; d++) {
         const nr = r + directions[d][0];
@@ -67,7 +91,7 @@ function main() {
           visited[nr][nc] = visited[r][c] + 1;
           countUnripeTomato -= 1;
           day = Math.max(day, visited[r][c] + 1);
-          queue.push([nr, nc]);
+          queue.enqueue([nr, nc]);
         }
       }
     }
