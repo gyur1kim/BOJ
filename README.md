@@ -10,6 +10,8 @@
 | 2023-06-11 | ![](TIER_IMG/G5.svg) |  [7569](https://www.acmicpc.net/problem/7569)  |               [토마토](https://github.com/gyur1kim/BOJ/blob/master/DFS%20BFS/7569_토마토)               | 141464KB | 848ms  |
 | 2024-12-16 | ![](TIER_IMG/G5.svg) | [16928](https://www.acmicpc.net/problem/16928) | [뱀과 사다리 게임](https://github.com/gyur1kim/BOJ/blob/master/DFS%20BFS/16928_뱀과%20사다리%20게임.js) |  9388KB  | 112ms  |
 | 2024-12-17 | ![](TIER_IMG/G3.svg) |  [4179](https://www.acmicpc.net/problem/4179)  |                [불!](https://github.com/gyur1kim/BOJ/blob/master/DFS%20BFS/4179_불!.js)                 | 168468KB | 1332ms |
+| 2024-12-21 | ![](TIER_IMG/G3.svg) |  [2146](https://www.acmicpc.net/problem/2146)  |       [다리 만들기](https://github.com/gyur1kim/BOJ/blob/master/DFS%20BFS/2146_다리%20만들기.js)        | 31972KB  | 484ms  |
+| 2024-12-23 | ![](TIER_IMG/G5.svg) |  [7576](https://www.acmicpc.net/problem/7576)  |             [토마토](https://github.com/gyur1kim/BOJ/blob/master/DFS%20BFS/7576_토마토.js)              | 176844KB | 1176ms |
 
 </div>
 </details>
@@ -44,6 +46,17 @@
 | 2023-06-29 | ![](TIER_IMG/G5.svg) | [14503](https://www.acmicpc.net/problem/14503) | [로봇 청소기](https://github.com/gyur1kim/BOJ/blob/master/구현/14503_로봇%20청소기) | 9384KB  | 128ms  |
 | 2023-07-02 | ![](TIER_IMG/G5.svg) |  [2116](https://www.acmicpc.net/problem/2116)  | [주사위 찾기](https://github.com/gyur1kim/BOJ/blob/master/구현/2116_주사위%20쌓기)  | 19628KB | 236ms  |
 | 2023-07-07 | ![](TIER_IMG/S5.svg) | [11723](https://www.acmicpc.net/problem/11723) |         [집합](https://github.com/gyur1kim/BOJ/blob/master/구현/11723_집합)         | 31256KB | 5964ms |
+
+</div>
+</details>
+
+<details>
+<summary style="font-size: 20px">정렬렬</summary>
+<div markdown="1">
+
+|    날짜    |         단계         |                   백준 링크                    |                                      github 링크                                       | 메모리  | 시간  |
+| :--------: | :------------------: | :--------------------------------------------: | :------------------------------------------------------------------------------------: | :-----: | :---: |
+| 2024-12-30 | ![](TIER_IMG/G5.svg) | [13164](https://www.acmicpc.net/problem/13164) | [행복 유치원](https://github.com/gyur1kim/BOJ/blob/master/정렬/13164_행복%20유치원.js) | 16472KB | 928ms |
 
 </div>
 </details>
