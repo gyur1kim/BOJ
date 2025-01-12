@@ -1,46 +1,21 @@
-/**
- * 더 이상 먹을 수 있는 물고기가 공간에 없다면 아기 상어는 엄마 상어에게 도움을 요청한다.
- * 먹을 수 있는 물고기가 1마리라면, 그 물고기를 먹으러 간다.
- * 먹을 수 있는 물고기가 1마리보다 많다면, 거리가 가장 가까운 물고기를 먹으러 간다.
- * 거리는 아기 상어가 있는 칸에서 물고기가 있는 칸으로 이동할 때, 지나야하는 칸의 개수의 최솟값이다.
- * 거리가 가까운 물고기가 많다면, 가장 위에 있는 물고기, 그러한 물고기가 여러마리라면, 가장 왼쪽에 있는 물고기를 먹는다.
- */
-
-class Queue {
-  constructor() {
-    this.items = {};
-    this.headIndex = 0;
-    this.tailIndex = 0;
-  }
-
-  enqueue(item) {
-    this.items[this.tailIndex] = item;
-    this.tailIndex++;
-  }
-
-  dequeue() {
-    const item = this.items[this.headIndex];
-    delete this.items[this.headIndex];
-    this.headIndex++;
-    return item;
-  }
-
-  isEmpty() {
-    return this.tailIndex - this.headIndex === 0;
-  }
-}
-
 function solution(N, map) {
+  let stack = [];
+  let nextStack = [];
+  const visited = Array(N)
+    .fill()
+    .map(() => Array(N).fill(false));
+
   // 상어 위치 찾기
-  let sharkPos;
   for (let i = 0; i < N; i++) {
     for (let j = 0; j < N; j++) {
       if (map[i][j] === 9) {
-        sharkPos = [i, j];
+        nextStack.push([i, j]);
+        visited[i][j] = true;
+        map[i][j] = 0;
         break;
       }
     }
-    if (sharkPos) break;
+    if (nextStack.length) break;
   }
 
   /**
@@ -54,75 +29,58 @@ function solution(N, map) {
    * bfs를 다시 진행한다.
    */
 
-  let sharkSize = 2;
-  let countSharkEat = 0;
-  let seconds = 0;
-
-  while (true) {
-    const [result, min] = bfs(sharkPos, sharkSize, N, map);
-    if (!result.length) break;
-
-    result.sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]));
-    sharkPos = result[0];
-    map[sharkPos[0]][sharkPos[1]] = 0;
-
-    countSharkEat++;
-    if (countSharkEat === sharkSize) {
-      sharkSize++;
-      countSharkEat = 0;
-    }
-
-    seconds += min;
-  }
-
-  console.log(seconds);
-}
-
-function bfs(sharkPos, sharkSize, N, map) {
   const directions = [
     [-1, 0],
     [0, -1],
     [1, 0],
     [0, 1],
   ];
-  const visited = Array(N)
-    .fill()
-    .map(() => Array(N).fill(-1));
-  const queue = new Queue();
 
-  const closestFishList = [];
-  let seconds = Infinity;
+  let sharkSize = 2;
+  let countSharkEat = 0;
+  let seconds = 0;
+  let answer = 0;
 
-  // 일단 초기 상어의 위치를 큐에 넣고, 방문했다고 표시
-  queue.enqueue(sharkPos);
-  visited[sharkPos[0]][sharkPos[1]] = 0;
-  map[sharkPos[0]][sharkPos[1]] = 0;
+  while (nextStack.length) {
+    stack = nextStack.sort((a, b) => (b[0] - a[0] === 0 ? b[1] - a[1] : b[0] - a[0]));
+    nextStack = [];
 
-  while (!queue.isEmpty()) {
-    const [r, c] = queue.dequeue();
+    while (stack.length) {
+      const [r, c] = stack.pop();
 
-    for (const [dr, dc] of directions) {
-      if (seconds < visited[r][c] + 1) return [closestFishList, seconds];
+      // 상어가 먹을 수 있는 생선 발견~!
+      if (map[r][c] !== 0 && map[r][c] < sharkSize) {
+        nextStack = [[r, c]];
+        stack = [];
 
-      const [nr, nc] = [r + dr, c + dc];
-      if (!checkRange(N, nr, nc) || visited[nr][nc] !== -1) continue;
+        visited.map(v => v.fill(false));
+        visited[r][c] = true;
+        map[r][c] = 0;
 
-      // 생선이 없거나, 생선이 나랑 크기가 같으면 지나가
-      if (!map[nr][nc] || map[nr][nc] === sharkSize) {
-        queue.enqueue([nr, nc]);
-        visited[nr][nc] = visited[r][c] + 1;
+        countSharkEat++;
+        if (countSharkEat === sharkSize) {
+          sharkSize++;
+          countSharkEat = 0;
+        }
+        answer = seconds--;
+        break;
       }
-      // 생선이 있는데 생선이 상어 크기보다 작음
-      else if (map[nr][nc] && map[nr][nc] < sharkSize) {
-        closestFishList.push([nr, nc]);
-        visited[nr][nc] = visited[r][c] + 1;
-        seconds = visited[nr][nc];
+
+      for (const [dr, dc] of directions) {
+        const [nr, nc] = [r + dr, c + dc];
+        if (!checkRange(N, nr, nc) || visited[nr][nc]) continue;
+
+        if (map[nr][nc] <= sharkSize) {
+          nextStack.push([nr, nc]);
+          visited[nr][nc] = true;
+        }
       }
-      // 생선이 나보다 크면 못지나감;;; 몰랐네
     }
+
+    seconds++;
   }
 
-  return [closestFishList, seconds];
+  console.log(answer);
 }
 
 function checkRange(N, nr, nc) {
@@ -139,3 +97,117 @@ const [N, ...inputs] = `6
 const map = inputs.map(input => input.split(" ").map(Number));
 
 solution(+N, map);
+
+// ==================================
+// 기존 class Queue 코드
+
+// class Queue {
+//   constructor() {
+//     this.items = {};
+//     this.headIndex = 0;
+//     this.tailIndex = 0;
+//   }
+
+//   enqueue(item) {
+//     this.items[this.tailIndex] = item;
+//     this.tailIndex++;
+//   }
+
+//   dequeue() {
+//     const item = this.items[this.headIndex];
+//     delete this.items[this.headIndex];
+//     this.headIndex++;
+//     return item;
+//   }
+
+//   isEmpty() {
+//     return this.tailIndex - this.headIndex === 0;
+//   }
+// }
+
+// function solution(N, map) {
+//   let sharkPos;
+//   for (let i = 0; i < N; i++) {
+//     for (let j = 0; j < N; j++) {
+//       if (map[i][j] === 9) {
+//         sharkPos = [i, j];
+//         break;
+//       }
+//     }
+//     if (sharkPos) break;
+//   }
+
+//   let sharkSize = 2;
+//   let countSharkEat = 0;
+//   let seconds = 0;
+
+//   while (true) {
+//     const [result, min] = bfs(sharkPos, sharkSize, N, map);
+//     if (!result.length) break;
+
+//     result.sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]));
+//     sharkPos = result[0];
+//     map[sharkPos[0]][sharkPos[1]] = 0;
+
+//     countSharkEat++;
+//     if (countSharkEat === sharkSize) {
+//       sharkSize++;
+//       countSharkEat = 0;
+//     }
+
+//     seconds += min;
+//   }
+
+//   console.log(seconds);
+// }
+
+// function bfs(sharkPos, sharkSize, N, map) {
+//   const directions = [
+//     [-1, 0],
+//     [0, -1],
+//     [1, 0],
+//     [0, 1],
+//   ];
+//   const visited = Array(N)
+//     .fill()
+//     .map(() => Array(N).fill(-1));
+//   const queue = new Queue();
+
+//   const closestFishList = [];
+//   let seconds = Infinity;
+
+//   queue.enqueue(sharkPos);
+//   visited[sharkPos[0]][sharkPos[1]] = 0;
+//   map[sharkPos[0]][sharkPos[1]] = 0;
+
+//   while (!queue.isEmpty()) {
+//     const [r, c] = queue.dequeue();
+
+//     for (const [dr, dc] of directions) {
+//       if (seconds < visited[r][c] + 1) return [closestFishList, seconds];
+
+//       const [nr, nc] = [r + dr, c + dc];
+//       if (!checkRange(N, nr, nc) || visited[nr][nc] !== -1) continue;
+
+//       if (!map[nr][nc] || map[nr][nc] === sharkSize) {
+//         queue.enqueue([nr, nc]);
+//         visited[nr][nc] = visited[r][c] + 1;
+//       } else if (map[nr][nc] && map[nr][nc] < sharkSize) {
+//         closestFishList.push([nr, nc]);
+//         visited[nr][nc] = visited[r][c] + 1;
+//         seconds = visited[nr][nc];
+//       }
+//     }
+//   }
+
+//   return [closestFishList, seconds];
+// }
+
+// function checkRange(N, nr, nc) {
+//   return 0 <= nr && nr < N && 0 <= nc && nc < N;
+// }
+
+// const [N, ...inputs] = require("fs").readFileSync(0, "utf-8").trim().split("\n");
+// const map = inputs.map(input => input.split(" ").map(Number));
+
+// solution(+N, map);
