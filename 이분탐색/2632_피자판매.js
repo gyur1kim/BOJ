@@ -1,50 +1,50 @@
-function solution(target, m, n, pizzasA, pizzasB) {
+function solution(target, m, n, pizzaA, pizzaB) {
   let answer = 0;
 
-  const pizzasAMap = new Map([[pizzasA.reduce((acc, cur) => acc + cur, 0), 1]]);
-  const pizzasBMap = new Map([[pizzasB.reduce((acc, cur) => acc + cur, 0), 1]]);
+  const pizzaAMap = new Map([
+    [0, 1],
+    [pizzaA.reduce((acc, cur) => acc + cur, 0), 1],
+  ]);
+  const pizzaBMap = new Map([
+    [0, 1],
+    [pizzaB.reduce((acc, cur) => acc + cur, 0), 1],
+  ]);
 
-  prefixSum(m, pizzasA, pizzasAMap, target);
-  prefixSum(n, pizzasB, pizzasBMap, target);
+  prefixSum(m, pizzaA, pizzaAMap, target);
+  prefixSum(n, pizzaB, pizzaBMap, target);
 
-  pizzasAMap.has(target) ? (answer += pizzasAMap.get(target)) : 0; // a피자만으로 생성 가능?
-  pizzasBMap.has(target) ? (answer += pizzasBMap.get(target)) : 0; // b피자만으로 생성 가능?
   // a피자와 b피자의 조합으로 가능?
-  pizzasAMap.forEach((cnt, value) => {
-    if (pizzasBMap.has(target - value)) {
-      answer += cnt * pizzasBMap.get(target - value);
+  pizzaAMap.forEach((cnt, value) => {
+    if (pizzaBMap.has(target - value)) {
+      answer += cnt * pizzaBMap.get(target - value);
     }
   });
 
   console.log(answer);
 }
 
-function prefixSum(n, pizzas, pizzasMap, target) {
-  const pizzasList = [...pizzas, ...pizzas];
-  let prefixList = [];
-
+function prefixSum(n, pizza, pizzaMap, target) {
   // 시작점을 바꾸는거야...
   for (let i = 0; i < n; i++) {
+    if (pizza[i] > target) continue;
+
+    const prefixList = [pizza[i]];
+    setMap(pizzaMap, pizza[i]);
+
     // prefixList의 인덱스에 접근하는거야...
-    for (let j = 0; j < n - 1; j++) {
-      if (j === 0) {
-        if (pizzasList[i] > target) break;
-        prefixList.push(pizzasList[i]);
-        setMap(pizzasMap, prefixList[j]);
-        continue;
-      }
+    for (let j = 1; j < n - 1; j++) {
+      const prefixPizza = prefixList[j - 1] + pizza[(j + i) % n];
 
-      if (prefixList[j - 1] + pizzas[j + i] > target) break;
-      prefixList.push(prefixList[j - 1] + pizzasList[j + i]);
-      setMap(pizzasMap, prefixList[j]);
+      if (prefixPizza > target) break;
+
+      prefixList.push(prefixPizza);
+      setMap(pizzaMap, prefixPizza);
     }
-
-    prefixList = [];
   }
 }
 
-function setMap(pizzasMap, value) {
-  pizzasMap.set(value, (pizzasMap.get(value) || 0) + 1);
+function setMap(pizzaMap, value) {
+  pizzaMap.set(value, (pizzaMap.get(value) || 0) + 1);
 }
 
 const [target, m, n, ...pizzas] = `7
@@ -60,7 +60,7 @@ const [target, m, n, ...pizzas] = `7
   .split(/\s/)
   .map(Number);
 
-const pizzasA = pizzas.slice(0, m);
-const pizzasB = pizzas.slice(m);
+const pizzaA = pizzas.slice(0, m);
+const pizzaB = pizzas.slice(m);
 
-solution(target, m, n, pizzasA, pizzasB);
+solution(target, m, n, pizzaA, pizzaB);
