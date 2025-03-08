@@ -1,33 +1,25 @@
 function dfs(r, c) {
-  if (r === N) {
-    for (let i = 0; i < N - 1; i++) {
-      for (let j = 0; j < M - 1; j++) {
-        if (
-          NEMO_BOARD[i][j] &&
-          NEMO_BOARD[i + 1][j] &&
-          NEMO_BOARD[i][j + 1] &&
-          NEMO_BOARD[i + 1][j + 1]
-        ) {
-          return;
-        }
-      }
-    }
-
-    answer += 1;
-    return;
-  }
+  if (r === N) return (answer += 1);
 
   const [nr, nc] = c + 1 === M ? [r + 1, 0] : [r, c + 1];
 
-  // 해당 위치에 넴모를 배치하거나 안하거나
-  NEMO_BOARD[r][c] = 1;
-  dfs(nr, nc);
+  // 1을 뒀을 때 내 위랑 왼쪽이랑 대각선 왼쪽 다 1이 아니면 1을 두고 dfs
+  if (
+    r - 1 < 0 ||
+    c - 1 < 0 ||
+    !NEMO_BOARD[r - 1][c - 1] ||
+    !NEMO_BOARD[r - 1][c] ||
+    !NEMO_BOARD[r][c - 1]
+  ) {
+    NEMO_BOARD[r][c] = 1;
+    dfs(nr, nc);
+  }
 
   NEMO_BOARD[r][c] = 0;
   dfs(nr, nc);
 }
 
-const [N, M] = `1 25`.split(" ").map(Number);
+const [N, M] = `2 12`.split(" ").map(Number);
 const NEMO_BOARD = Array(N)
   .fill()
   .map(() => Array(M).fill(0));
