@@ -20,14 +20,11 @@ const visited = Array(K + 1)
 maps = maps.map(m => m.split("").map(Number));
 let answer = 0;
 
-const result = bfs(0, 0, K, visited, maps);
-console.log(result ? answer : -1);
-
 function checkInRange(r, c) {
   return 0 <= r && r < N && 0 <= c && c < M;
 }
 
-function bfs(r, c, k, visited, maps) {
+(function bfs() {
   const directions = [
     [-1, 0],
     [0, 1],
@@ -35,8 +32,8 @@ function bfs(r, c, k, visited, maps) {
     [0, -1],
   ];
   let queue = [];
-  let nextQueue = [[r, c, k]];
-  visited[k][r][c] = true;
+  let nextQueue = [[0, 0, K]];
+  visited[K][0][0] = true;
 
   while (nextQueue.length) {
     queue = [...nextQueue];
@@ -45,7 +42,10 @@ function bfs(r, c, k, visited, maps) {
 
     while (queue.length) {
       const [r, c, k] = queue.pop();
-      if (r === N - 1 && c === M - 1) return true;
+      if (r === N - 1 && c === M - 1) {
+        console.log(answer);
+        process.exit(0);
+      }
 
       for (const [dr, dc] of directions) {
         const [nr, nc] = [dr + r, dc + c];
@@ -64,5 +64,5 @@ function bfs(r, c, k, visited, maps) {
     }
   }
 
-  return false;
-}
+  console.log(-1);
+})();
