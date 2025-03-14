@@ -5,9 +5,10 @@ let [V, ...inputs] = `5
 4 2 4 3 3 5 6 -1
 5 4 6 -1`.split("\n");
 V = Number(V);
+// tree[i] = [인접노드, 거리]
 const tree = Array(V + 1)
   .fill()
-  .map(() => Array(V + 1).fill(0));
+  .map(() => []);
 
 for (const input of inputs) {
   const [v, ...nodes] = input.split(" ").map(Number);
@@ -15,9 +16,7 @@ for (const input of inputs) {
   for (let i = 0; i < LENGTH; i += 2) {
     const w = nodes[i];
     const dist = nodes[i + 1];
-
-    tree[v][w] = dist;
-    tree[w][v] = dist;
+    tree[v].push([w, dist]);
   }
 }
 
@@ -35,14 +34,19 @@ dfs(max[0], 0);
 console.log(max[1]);
 
 function dfs(v, dist) {
-  if (max[1] < dist) max = [v, dist];
+  const stack = [[v, dist]];
 
-  const neighbor = tree[v];
-  neighbor.forEach((len, w) => {
-    if (len === 0) return;
-    if (visited[w]) return;
+  while (stack.length) {
+    const [v, dist] = stack.pop();
 
-    visited[w] = true;
-    dfs(w, dist + tree[v][w]);
-  });
+    if (max[1] < dist) max = [v, dist];
+
+    const neighbor = tree[v];
+    for (const [w, nextDist] of neighbor) {
+      if (visited[w]) continue;
+
+      visited[w] = true;
+      stack.push([w, dist + nextDist]);
+    }
+  }
 }
