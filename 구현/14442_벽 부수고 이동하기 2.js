@@ -10,13 +10,9 @@ let [NMK, ...maps] = `8 8 1
 `.split("\n");
 const [N, M, K] = NMK.split(" ").map(Number);
 // [부순 벽][row][col]
-const visited = Array(K + 1)
+const visited = Array(N)
   .fill()
-  .map(() =>
-    Array(N)
-      .fill()
-      .map(() => Array(M).fill(false))
-  );
+  .map(() => Array(M).fill(-1));
 maps = maps.map(m => m.split("").map(Number));
 let answer = 0;
 
@@ -33,7 +29,7 @@ function checkInRange(r, c) {
   ];
   let queue = [];
   let nextQueue = [[0, 0, K]];
-  visited[K][0][0] = true;
+  visited[0][0] = K;
 
   while (nextQueue.length) {
     queue = [...nextQueue];
@@ -43,22 +39,23 @@ function checkInRange(r, c) {
     while (queue.length) {
       const [r, c, k] = queue.pop();
       if (r === N - 1 && c === M - 1) {
-        console.log(answer);
-        process.exit(0);
+        return console.log(answer);
       }
 
       for (const [dr, dc] of directions) {
         const [nr, nc] = [dr + r, dc + c];
 
         if (!checkInRange(nr, nc)) continue;
-        if (visited[k][nr][nc]) continue;
+        // 누군가 지나간 곳 && 내가 지나갔거나 (=k) 혹은 나보다 더 센 애(>k)가 지나갔으면 못지나가
+        // 나보다 벽을 더 부순 애(k값이 나보다 작음)가 지나간거면 난 지나가도 됨
+        if (visited[nr][nc] !== -1 && visited[nr][nc] >= k) continue;
 
         if (maps[nr][nc] === 0) {
           nextQueue.push([nr, nc, k]);
-          visited[k][nr][nc] = true;
+          visited[nr][nc] = k;
         } else if (k > 0) {
           nextQueue.push([nr, nc, k - 1]);
-          visited[k][nr][nc] = true;
+          visited[nr][nc] = k - 1;
         }
       }
     }
