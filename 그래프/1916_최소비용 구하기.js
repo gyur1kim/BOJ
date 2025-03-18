@@ -1,50 +1,50 @@
 // 최소힙 기반 우선순위 큐 구현 (메모리 효율적으로)
 class MinHeap {
   constructor() {
-    this.heap = [];
+    this.heap = [-1];
   }
 
   getParentIndex(index) {
-    return Math.floor((index - 1) / 2);
+    return Math.floor(index / 2);
   }
 
   getLeftChildIndex(index) {
-    return 2 * index + 1;
+    return 2 * index;
   }
 
   getRightChildIndex(index) {
-    return 2 * index + 2;
+    return 2 * index + 1;
   }
 
   swap(index1, index2) {
     [this.heap[index1], this.heap[index2]] = [this.heap[index2], this.heap[index1]];
   }
 
-  enqueue(node) {
+  insert(node) {
     this.heap.push(node);
     this.heapifyUp();
   }
 
-  dequeue() {
-    if (this.heap.length === 0) return null;
+  pop() {
+    if (this.heap.length === 1) return null;
 
-    const min = this.heap[0];
+    const minNode = this.heap[1];
     const last = this.heap.pop();
 
-    if (this.heap.length > 0) {
-      this.heap[0] = last;
+    if (this.heap.length > 1) {
+      this.heap[1] = last;
       this.heapifyDown();
     }
 
-    return min;
+    return minNode;
   }
 
   heapifyUp() {
     let index = this.heap.length - 1;
+
     while (index > 0) {
       const parentIndex = this.getParentIndex(index);
-      // 비용 기준으로 비교
-      if (this.heap[parentIndex][1] > this.heap[index][1]) {
+      if (this.heap[parentIndex].dist > this.heap[index].dist) {
         this.swap(parentIndex, index);
         index = parentIndex;
       } else {
@@ -54,7 +54,7 @@ class MinHeap {
   }
 
   heapifyDown() {
-    let index = 0;
+    let index = 1;
     const length = this.heap.length;
 
     while (true) {
@@ -62,17 +62,14 @@ class MinHeap {
       const rightChildIndex = this.getRightChildIndex(index);
       let smallest = index;
 
-      // 왼쪽 자식이 존재하고 현재 노드보다 작으면 가장 작은 노드 갱신
-      if (leftChildIndex < length && this.heap[leftChildIndex][1] < this.heap[smallest][1]) {
+      if (leftChildIndex < length && this.heap[leftChildIndex].dist < this.heap[smallest].dist) {
         smallest = leftChildIndex;
       }
 
-      // 오른쪽 자식이 존재하고 현재 가장 작은 노드보다 작으면 가장 작은 노드 갱신
-      if (rightChildIndex < length && this.heap[rightChildIndex][1] < this.heap[smallest][1]) {
+      if (rightChildIndex < length && this.heap[rightChildIndex].dist < this.heap[smallest].dist) {
         smallest = rightChildIndex;
       }
 
-      // 현재 노드가 가장 작은 노드가 아니면 위치 교환
       if (smallest !== index) {
         this.swap(index, smallest);
         index = smallest;
@@ -83,58 +80,62 @@ class MinHeap {
   }
 
   isEmpty() {
-    return this.heap.length === 0;
+    return this.heap.length === 1;
   }
 }
 
 // 다익스트라 알고리즘 구현 (메모리 최적화)
 function dijkstra(graph, start, end) {
-  const distance = new Array(N + 1).fill(Infinity);
-  distance[start] = 0;
+  const d = new Array(N + 1).fill(Infinity);
+  d[start] = 0;
 
   const minHeap = new MinHeap();
-  minHeap.enqueue([start, 0]); // [노드, 거리]
+  minHeap.insert({ node: start, dist: 0 });
 
   while (!minHeap.isEmpty()) {
-    const [current, dist] = minHeap.dequeue();
+    const { node: v, dist } = minHeap.pop();
 
-    // 현재 거리가 이미 알려진 최소 거리보다 크면 무시
-    if (dist > distance[current]) continue;
+    // 최단 거리가 아니면 무시
+    if (dist > d[v]) continue;
 
-    // 목적지에 도달하면 바로 반환 (최적화)
-    if (current === end) return dist;
+    if (v === end) break;
 
     // 이웃 노드들 확인
-    if (graph[current]) {
-      for (const [next, cost] of graph[current]) {
-        const newDist = dist + cost;
+    if (graph[v]) {
+      for (const { node: w, dist: distW } of graph[v]) {
+        const newDist = dist + distW;
 
-        if (newDist < distance[next]) {
-          distance[next] = newDist;
-          minHeap.enqueue([next, newDist]);
+        if (newDist < d[w]) {
+          d[w] = newDist;
+          minHeap.insert({ node: w, dist: newDist });
         }
       }
     }
   }
 
-  return distance[end];
+  return d[end];
 }
 
-const inputs = `4
-4
-4 2 9
-2 1 58
-1 3 25
-2 1 22
-4 3`.split("\n");
+const inputs = `5
+8
+1 2 2
+1 3 3
+1 4 1
+1 5 10
+2 4 2
+3 4 1
+3 5 1
+4 5 3
+1 5`.split("\n");
 
 const N = +inputs[0];
 const M = +inputs[1];
 const graph = Array.from({ length: N + 1 }, () => []);
 for (let i = 2; i < M + 2; i++) {
   const [v, w, dist] = inputs[i].split(" ").map(Number);
-  graph[v].push([w, dist]);
+  graph[v].push({ node: w, dist });
 }
+
 const [start, end] = inputs[M + 2].split(" ").map(Number);
 const answer = dijkstra(graph, start, end);
 console.log(answer);
