@@ -5,10 +5,10 @@ const [T, ...inputs] = `11
 1000000000`
   .split("\n")
   .map(Number);
-const MOD = 10_0000_0007;
+const MOD = BigInt(10_0000_0007);
 
 function pow(a, n) {
-  let result = 1;
+  let result = 1n;
 
   while (n > 0) {
     //n이 홀수인 경우, 결과에 a를 곱하고 n을 하나 감소
@@ -31,7 +31,7 @@ for (const N of inputs) {
   if (N < 3) {
     answer += "1\n";
   } else {
-    answer += `${pow(2, N - 2)}\n`;
+    answer += `${Number(pow(BigInt(2), N - 2))}\n`;
   }
 }
 
