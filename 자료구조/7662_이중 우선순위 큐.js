@@ -86,7 +86,7 @@ class PriorityQueue {
 
 function solution(operations) {
   // pq는 최소힙으로 구현됨
-  const MAX_PQ = new PriorityQueue(false); // -1을 곱해서, 큰 값이 위로 오게 할거임
+  const MAX_PQ = new PriorityQueue(false);
   const MIN_PQ = new PriorityQueue(true);
   const numMap = new Map();
 
@@ -102,55 +102,30 @@ function solution(operations) {
         break;
       case "D":
         // 작은 값을 빼세요
-        if (val === -1) {
-          getMin();
-        }
+        if (val === -1) dequeueVal(MIN_PQ);
         // 큰 값을 빼세요
-        else {
-          getMax();
-        }
+        else dequeueVal(MAX_PQ);
     }
   }
 
   if (numMap.size === 0) return "EMPTY";
 
-  const min = getMin();
-  const max = getMax();
+  const min = dequeueVal(MIN_PQ);
+  const max = dequeueVal(MAX_PQ);
 
   if (max === null || min === null) return `${min} ${min}`;
   return `${max} ${min}`;
 
-  function getMin() {
-    while (!MIN_PQ.isEmpty()) {
-      const min = MIN_PQ.dequeue();
+  function dequeueVal(PQ) {
+    while (!PQ.isEmpty()) {
+      const item = PQ.dequeue();
 
-      if (!numMap.has(min)) continue;
+      if (!numMap.has(item)) continue;
 
-      const cnt = numMap.get(min);
-      if (cnt === 1) {
-        numMap.delete(min);
-      } else {
-        numMap.set(min, cnt - 1);
-      }
-      return min;
-    }
-    return null;
-  }
+      const cnt = numMap.get(item);
+      cnt === 1 ? numMap.delete(item) : numMap.set(item, cnt - 1);
 
-  function getMax() {
-    while (!MAX_PQ.isEmpty()) {
-      let max = MAX_PQ.dequeue();
-
-      if (!numMap.has(max)) continue;
-
-      const cnt = numMap.get(max);
-      if (cnt === 1) {
-        numMap.delete(max);
-      } else {
-        numMap.set(max, cnt - 1);
-      }
-
-      return max;
+      return item;
     }
     return null;
   }
@@ -167,12 +142,12 @@ I 99
 D -1`.split("\n");
 const TC = input[0];
 let idx = 1;
-let ans = "";
+let ans = [];
 for (let tc = 0; tc < TC; tc++) {
   let len = +input[idx];
   const operations = input.slice(idx + 1, idx + len + 1);
   const res = solution(operations);
-  ans += `${res}\n`;
+  ans.push(res);
   idx += len + 1;
 }
-console.log(ans);
+console.log(ans.join("\n"));
